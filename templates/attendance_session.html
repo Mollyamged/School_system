@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="attendance-session-page" class="page active">
+    <h2>Select Attendance Session</h2>
+    <p>Choose when you want to take attendance</p>
+    
+    <div class="attendance-options">
+        <div class="feature-card" onclick="window.location.href='{{ url_for('attendance_taking') }}?session=before-break'">
+            <div class="feature-icon">🌅</div>
+            <h3>Before Break</h3>
+            <p>Take attendance in the morning</p>
+        </div>
+        
+        <div class="feature-card" onclick="window.location.href='{{ url_for('attendance_taking') }}?session=after-break'">
+            <div class="feature-icon">🌇</div>
+            <h3>After Break</h3>
+            <p>Take attendance after break time</p>
+        </div>
+    </div>
+    
+    <div class="nav-buttons">
+        <button class="btn btn-outline" onclick="window.location.href='{{ url_for('attendance_init') }}'">Back</button>
+    </div>
+</div>
+{% endblock %}

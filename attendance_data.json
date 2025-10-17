@@ -1,0 +1,53 @@
+{
+  "attendance_records": [
+    {
+      "date": "2025-10-17T18:06:52.709065",
+      "session": "before-break",
+      "students": [
+        {
+          "id": 1,
+          "name": "Alice Johnson",
+          "present": true
+        },
+        {
+          "id": 2,
+          "name": "Bob Smith",
+          "present": true
+        },
+        {
+          "id": 3,
+          "name": "Carol Williams",
+          "present": true
+        },
+        {
+          "id": 4,
+          "name": "David Brown",
+          "present": true
+        },
+        {
+          "id": 5,
+          "name": "Eva Davis",
+          "present": true
+        },
+        {
+          "id": 6,
+          "name": "Frank Miller",
+          "present": true
+        },
+        {
+          "id": 7,
+          "name": "Grace Wilson",
+          "present": false
+        },
+        {
+          "id": 8,
+          "name": "Henry Moore",
+          "present": false
+        }
+      ]
+    }
+  ],
+  "initialized_days": [
+    "2025-10-17"
+  ]
+}

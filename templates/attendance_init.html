@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="attendance-init-page" class="page active">
+    <h2>Initialize School Day</h2>
+    
+    <div class="date-display" id="current-date">
+        <!-- Date will be inserted by JavaScript -->
+    </div>
+    
+    <div class="day-status">
+        {% if today_initialized %}
+            <div class="status-indicator status-present">✅ Today is a School Day</div>
+            <p class="info-message">
+                <strong>Today has been initialized as a school day.</strong><br>
+                Attendance will be counted in student percentages.
+            </p>
+        {% else %}
+            <div class="status-indicator status-absent">⏳ Day Not Initialized</div>
+            <p class="info-message">
+                <strong>Today is not yet marked as a school day.</strong><br>
+                Initialize the day to start taking attendance.
+            </p>
+        {% endif %}
+    </div>
+    
+    {% if not today_initialized %}
+    <div style="text-align: center; margin: 30px 0;">
+        <button class="btn btn-secondary" onclick="initializeDay()">Initialize Today as School Day</button>
+    </div>
+    {% endif %}
+    
+    <div class="nav-buttons">
+        <button class="btn btn-outline" onclick="window.location.href='{{ url_for('home') }}'">Back to Home</button>
+        
+        {% if today_initialized %}
+            <button class="btn" onclick="window.location.href='{{ url_for('attendance_session') }}'">Take Attendance</button>
+        {% else %}
+            <button class="btn" disabled>Take Attendance (Initialize Day First)</button>
+        {% endif %}
+    </div>
+    
+    <div class="info-box">
+        <h4>📚 How Day Initialization Works:</h4>
+        <ul>
+            <li>✅ <strong>Initialized Day</strong> = School Day (attendance counts)</li>
+            <li>❌ <strong>Not Initialized</strong> = No School (weekend/holiday/break - attendance doesn't count)</li>
+            <li>🔒 <strong>Once per day</strong> - Can only initialize once per calendar day</li>
+            <li>📊 <strong>Attendance Percentage</strong> - Only calculated based on initialized days</li>
+        </ul>
+        
+        <div class="stat-box">
+            <h5>School Days This Period: <span id="school-days-count">Loading...</span></h5>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        displayCurrentDate();
+        loadSchoolDaysCount();
+    });
+</script>
+{% endblock %}
