@@ -3,7 +3,7 @@
 {% block content %}
 <div id="attendance-taking-page" class="page active">
     <h2 id="session-title">
-        {% if session_type == 'before-break' %}
+        {% if session == 'before-break' %}
             Take Attendance - Before Break
         {% else %}
             Take Attendance - After Break
@@ -11,7 +11,7 @@
     </h2>
     
     <p id="session-description">
-        {% if session_type == 'before-break' %}
+        {% if session == 'before-break' %}
             Mark students as present or absent for the morning session
         {% else %}
             Mark students as present or absent for the afternoon session
@@ -21,64 +21,47 @@
     <div class="date-display" id="attendance-date">
         <!-- Date will be inserted by JavaScript -->
     </div>
-    
-    <div class="student-list" id="student-list">
-        {% for student in students %}
-        <div class="student-item" data-student-id="{{ student.id }}">
-            <div class="student-info">
-                <div class="student-avatar">{{ student.name[0] }}</div>
-                <div>
-                    <div class="student-name">{{ student.name }}</div>
-                    <div class="student-details">
-                        <div class="status-indicator status-absent">Absent</div>
-                        <div class="attendance-percentage">Overall Attendance: {{ student.attendance_percentage }}%</div>
+
+    <form method="post">
+        <div class="student-list" id="student-list">
+            {% for student in students %}
+            <div class="student-item" data-student-id="{{ student.id }}">
+                <div class="student-info">
+                    <div class="student-avatar">{{ student[1] }}</div>
+                    <div>
+                        <div class="student-name">{{ student[1] }}</div>
+                        <div class="student-details">
+                            <div class="status-indicator status-absent">Absent</div>
+                            <div class="attendance-percentage">Overall Attendance: 0%</div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- FIX: input needs quotes around name/value -->
+                <label class="attendance-toggle">
+                    <input type="checkbox" name="{{ student[0] }}" value="1">
+                    <span class="slider"></span>
+                </label>
             </div>
-            <label class="attendance-toggle">
-                <input type="checkbox" onchange="toggleAttendance({{ student.id }}, this.checked)">
-                <span class="slider"></span>
-            </label>
+            {% endfor %}
         </div>
-        {% endfor %}
-    </div>
-    
-    <div class="summary">
-        <h3>Today's Attendance Summary</h3>
-        <div class="summary-stats">
-            <div class="stat-item">
-                <div class="stat-value" id="total-students">{{ students|length }}</div>
-                <div class="stat-label">Total Students</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value" id="present-count">{{ today_stats.present }}</div>
-                <div class="stat-label">Present</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value" id="absent-count">{{ today_stats.absent }}</div>
-                <div class="stat-label">Absent</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value" id="attendance-rate">{{ today_stats.rate }}%</div>
-                <div class="stat-label">Today's Rate</div>
-            </div>
+        
+        <div class="quick-actions" style="margin: 20px 0; text-align: center;">
+            <button class="btn btn-outline" type="button" onclick="markAllPresent()">Mark All Present</button>
+            <button class="btn btn-outline" type="button" onclick="markAllAbsent()">Mark All Absent</button>
         </div>
-    </div>
-    
-    <div class="quick-actions" style="margin: 20px 0; text-align: center;">
-        <button class="btn btn-outline" onclick="markAllPresent()">Mark All Present</button>
-        <button class="btn btn-outline" onclick="markAllAbsent()">Mark All Absent</button>
-    </div>
-    
-    <div class="nav-buttons">
-        <button class="btn btn-outline" onclick="window.location.href='{{ url_for('attendance_session') }}'">Back to Session Selection</button>
-        <button class="btn btn-secondary" onclick="submitAttendance()">Submit Attendance</button>
-    </div>
-    
+
+        <div class="nav-buttons">
+            <button class="btn btn-outline" type="button" onclick="window.location.href='{{ url_for('attendance_session') }}'">Back to Session Selection</button>
+            <button class="btn btn-secondary" type="submit">Submit Attendance</button>
+        </div>
+    </form>
+
+
     <div class="info-box">
         <h4>📊 Attendance Information:</h4>
         <ul>
-            <li><strong>Session:</strong> {{ 'Before Break (Morning)' if session_type == 'before-break' else 'After Break (Afternoon)' }}</li>
+            <li><strong>Session:</strong> {{ 'Before Break (Morning)' if session == 'before-break' else 'After Break (Afternoon)' }}</li>
             <li><strong>Overall Percentage:</strong> Calculated only from initialized school days</li>
             <li><strong>Today's Status:</strong> Today is initialized as a school day and will count in percentages</li>
             <li><strong>Note:</strong> Submitting attendance will save the current marks for this session</li>
@@ -89,8 +72,7 @@
 
 {% block scripts %}
 <script>
-    const students = {{ students|tojson }};
-    const sessionType = "{{ session_type }}";
+    const sessionType = "{{ session }}";
     
     document.addEventListener('DOMContentLoaded', function() {
         displayCurrentDate();

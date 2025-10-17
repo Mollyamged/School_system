@@ -6,35 +6,65 @@
     
     <div class="session-info">
         <div class="status-indicator {% if session_type == 'before-break' %}status-present{% else %}status-absent{% endif %}">
-            Session: {{ 'Before Break' if session_type == 'before-break' else 'After Break' }}
+            Session: {{ 'Before Break' if session == 'before-break' else 'After Break' }}
         </div>
     </div>
-    
+    {% set current_session = session %}
     <p>Choose a class to take attendance:</p>
     
     <div class="classes-grid">
-        {% for grade in [1, 2, 3] %}
+
         <div class="grade-section">
-            <h3>Grade {{ grade }}</h3>
+            <h3>Grade 1</h3>
             <div class="classes-container">
-                {% for class_letter in ['A', 'B', 'C', 'D'] %}
-                {% set class_name = grade ~ class_letter %}
+                {% for class in g1classes %}
+                {% set class_name = grade ~ class[0] %}
                 <div class="class-card" 
-                     onclick="window.location.href='{{ url_for('attendance_taking') }}?session={{ session_type }}&grade={{ grade }}&class={{ class_name }}'">
+                     onclick="window.location.href='{{ url_for('attendance_taking') }}?session={{ current_session }}&grade={{ grade }}&class={{ class_name }}'">
                     <div class="class-icon">📚</div>
                     <div class="class-name">Class {{ class_name }}</div>
                     <div class="class-info">
-                        {% if classes_by_grade[grade] and class_name in classes_by_grade[grade] %}
-                            <span class="status-indicator status-present">Active</span>
-                        {% else %}
-                            <span class="status-indicator status-absent">No Students</span>
-                        {% endif %}
+                        <span class="status-indicator status-present">Active</span>
                     </div>
                 </div>
                 {% endfor %}
             </div>
         </div>
-        {% endfor %}
+
+        <div class="grade-section">
+            <h3>Grade 2</h3>
+            <div class="classes-container">
+                {% for class in g2classes %}
+                {% set class_name = grade ~ class[0] %}
+                <div class="class-card" 
+                     onclick="window.location.href='{{ url_for('attendance_taking') }}?session={{ current_session }}&grade={{ grade }}&class={{ class_name }}'">
+                    <div class="class-icon">📚</div>
+                    <div class="class-name">Class {{ class_name }}</div>
+                    <div class="class-info">
+                        <span class="status-indicator status-present">Active</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="grade-section">
+            <h3>Grade 3</h3>
+            <div class="classes-container">
+                {% for class in g3classes %}
+                {% set class_name = grade ~ class[0] %}
+                <div class="class-card" 
+                     onclick="window.location.href='{{ url_for('attendance_taking') }}?session={{ current_session }}&grade={{ grade }}&class={{ class_name }}'">
+                    <div class="class-icon">📚</div>
+                    <div class="class-name">Class {{ class_name }}</div>
+                    <div class="class-info">
+                        <span class="status-indicator status-present">Active</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
     </div>
     
     <div class="nav-buttons">
