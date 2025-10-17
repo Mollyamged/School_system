@@ -1,12 +1,19 @@
 import sqlite3
 
 def create_database():
-    # Connect to SQLite database (creates a new database if it doesn't exist)
     conn = sqlite3.connect('school.db')
     cursor = conn.cursor()
 
-    # Enable foreign key support
     cursor.execute("PRAGMA foreign_keys = ON;")
+
+    # Create classes first (referenced table)
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS classes (
+            grade INTEGER NOT NULL,
+            class TEXT NOT NULL,
+            PRIMARY KEY (grade, class)
+        )
+    ''')
 
     # Create students table
     cursor.execute('''
@@ -14,9 +21,10 @@ def create_database():
             ssn TEXT PRIMARY KEY,
             name TEXT NOT NULL,
             age INTEGER NOT NULL,
+            num_absences INTEGER DEFAULT 0,
             grade INTEGER NOT NULL,
             class TEXT NOT NULL,
-            num_absences INTEGER DEFAULT 0
+            FOREIGN KEY (grade, class) REFERENCES classes (grade, class)
         )
     ''')
 
@@ -54,7 +62,6 @@ def create_database():
         )
     ''')
 
-    # Commit the changes and close the connection
     conn.commit()
     conn.close()
 
